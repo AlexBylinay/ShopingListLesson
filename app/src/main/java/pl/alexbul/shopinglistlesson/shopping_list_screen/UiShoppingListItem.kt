@@ -1,6 +1,7 @@
 package pl.alexbul.shopinglistlesson.shopping_list_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,10 +28,11 @@ import pl.alexbul.shopinglistlesson.ui.theme.GreenLight
 import pl.alexbul.shopinglistlesson.ui.theme.Red500
 
 
-
 @Composable
 fun UiShoppingListItem(
-    item:ShoppingListItem
+    item: ShoppingListItem,
+    onEvent: (ShoppingListEvent) -> Unit
+
 ) {
     ConstraintLayout(
         modifier = Modifier.padding(
@@ -45,6 +47,9 @@ fun UiShoppingListItem(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                }
+                .clickable {
+
                 })
         {
             Column(
@@ -77,7 +82,9 @@ fun UiShoppingListItem(
             }
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onEvent(ShoppingListEvent.OnShowDeleteDialog(item))
+            },
             modifier = Modifier
                 .constrainAs(deleteButton) {
                     top.linkTo(card.top)
@@ -100,7 +107,9 @@ fun UiShoppingListItem(
         }
 
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onEvent(ShoppingListEvent.OnShowDEventDialog(item))
+            },
             modifier = Modifier
                 .constrainAs(editButton) {
                     top.linkTo(card.top)
@@ -133,10 +142,16 @@ fun UiShoppingListItem(
                 }
                 .padding(end = 6.dp)
         ) {
-            Text(text = "${item.allItemsCount}/${item.allSelectedItemsCount}",
-            modifier = Modifier.padding(top =8.dp,
+            Text(
+                text = "${item.allItemsCount}/${item.allSelectedItemsCount}",
+                modifier = Modifier
+                    .padding(
+                        top = 8.dp,
 
-                end =5.dp).background(Red500))
+                        end = 5.dp
+                    )
+                    .background(Red500)
+            )
         }
 
     }

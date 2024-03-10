@@ -31,9 +31,12 @@ fun ShoppingListScreen(
     )
     {
         items(itemsList.value){
-item ->  UiShoppingListItem(item)
+item ->  UiShoppingListItem(item){ event->
+            viewModel.onEvent(event)
+        }
         }
     }
+    MainDialog(viewModel)
 
 
 
