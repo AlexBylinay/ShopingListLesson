@@ -46,7 +46,9 @@ fun MainScreen(
         isFloatingActionButtonDocked = true
     ) {
 
-        NavigationGraph(navController)
+        NavigationGraph(navController){route->
+            mainNavController.navigate(route)
+        }
         MainDialog(viewModel)
     }
 

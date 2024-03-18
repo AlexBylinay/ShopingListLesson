@@ -21,7 +21,7 @@ val navController = rememberNavController()
     NavHost(navController = navController,
     startDestination = Routs.MAIN_SCREEN) {
 
-        composable(Routs.ADD_ITEM) {
+        composable(Routs.ADD_ITEM+ "/{listId}") {
             AddItemScreen()
         }
         composable(Routs.NEW_NOTE) {
