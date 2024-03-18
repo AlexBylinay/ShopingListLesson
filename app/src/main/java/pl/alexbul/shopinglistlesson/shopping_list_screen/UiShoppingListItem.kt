@@ -26,6 +26,7 @@ import  pl.alexbul.shopinglistlesson.R
 import pl.alexbul.shopinglistlesson.data.ShoppingListItem
 import pl.alexbul.shopinglistlesson.ui.theme.GreenLight
 import pl.alexbul.shopinglistlesson.ui.theme.Red500
+import pl.alexbul.shopinglistlesson.utils.Routs
 
 
 @Composable
@@ -49,6 +50,7 @@ fun UiShoppingListItem(
                     end.linkTo(parent.end)
                 }
                 .clickable {
+                  onEvent(ShoppingListEvent.OnItemClick(Routs.ADD_ITEM))
 
                 })
         {

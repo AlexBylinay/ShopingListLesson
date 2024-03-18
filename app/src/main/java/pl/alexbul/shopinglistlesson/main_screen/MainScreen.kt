@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import pl.alexbul.shopinglistlesson.R
 import pl.alexbul.shopinglistlesson.dialog.MainDialog
@@ -18,7 +20,9 @@ import pl.alexbul.shopinglistlesson.shopping_list_screen.ShoppingListViewModel
 
 @SuppressLint
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel = hiltViewModel()) {
+fun MainScreen(
+    mainNavController: NavHostController,
+    viewModel: MainScreenViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {

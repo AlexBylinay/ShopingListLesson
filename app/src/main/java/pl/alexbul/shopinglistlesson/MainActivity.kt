@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import pl.alexbul.shopinglistlesson.main_screen.MainScreen
+import pl.alexbul.shopinglistlesson.navigation.MainNavigationGraph
 import pl.alexbul.shopinglistlesson.ui.theme.ShopingListLessonTheme
 
 @AndroidEntryPoint
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainScreen ()
+                    MainNavigationGraph()
                 }
             }
         }
