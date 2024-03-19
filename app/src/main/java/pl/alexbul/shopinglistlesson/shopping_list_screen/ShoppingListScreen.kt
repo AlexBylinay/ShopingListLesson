@@ -17,16 +17,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collect
 import pl.alexbul.shopinglistlesson.dialog.MainDialog
 import pl.alexbul.shopinglistlesson.ui.theme.GrayLight
+import pl.alexbul.shopinglistlesson.utils.UiEvent
 
 @Composable
 fun ShoppingListScreen(
-    viewModel: ShoppingListViewModel = hiltViewModel()
+    viewModel: ShoppingListViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
 
     val itemsList = viewModel.list.collectAsState(initial = emptyList())
     LaunchedEffect(key1 = true )
     {
-        viewModel.uiEvent.collect()
+        viewModel.uiEvent.collect{uiEvent ->
+            when (uiEvent){
+                is UiEvent.Navigate ->{
+                    onNavigate(uiEvent.route)
+                }
+                else ->{}
+            }
+
+        }
     }
     LazyColumn(
         modifier = Modifier
