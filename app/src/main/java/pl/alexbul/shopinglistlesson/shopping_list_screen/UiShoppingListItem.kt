@@ -51,7 +51,7 @@ fun UiShoppingListItem(
                 }
                 .clickable {
                   onEvent(ShoppingListEvent.OnItemClick(
-                      Routs.ADD_ITEM + "/${item.id}"))
+                     Routs.ADD_ITEM + "/${item.id}"))
 
                 })
         {

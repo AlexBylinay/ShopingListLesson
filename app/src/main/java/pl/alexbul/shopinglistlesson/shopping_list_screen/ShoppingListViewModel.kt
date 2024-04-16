@@ -1,6 +1,7 @@
 package pl.alexbul.shopinglistlesson.shopping_list_screen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: ShoppingListRepository
 ) : ViewModel(), DialogController {
 
@@ -95,6 +97,8 @@ class ShoppingListViewModel @Inject constructor(
             is DialogEvent.OnTextChange -> {
                 editableText.value = event.text
             }
+
+            else -> {}
         }
     }
 

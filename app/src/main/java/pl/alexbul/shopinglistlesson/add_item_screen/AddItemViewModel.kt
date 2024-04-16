@@ -1,5 +1,6 @@
 package pl.alexbul.shopinglistlesson.add_item_screen
 
+import android.app.UiAutomation
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -7,13 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
+
 import kotlinx.coroutines.launch
 import pl.alexbul.shopinglistlesson.data.AddItem
 import pl.alexbul.shopinglistlesson.data.AddItemRepository
+import pl.alexbul.shopinglistlesson.data.ShoppingListItem
 import pl.alexbul.shopinglistlesson.dialog.DialogController
 import pl.alexbul.shopinglistlesson.dialog.DialogEvent
 import pl.alexbul.shopinglistlesson.main_screen.MainScreenEvent
+import pl.alexbul.shopinglistlesson.utils.UiEvent
 
 import javax.inject.Inject
 
@@ -21,18 +27,27 @@ import javax.inject.Inject
 class AddItemViewModel @Inject constructor(
     private val repository: AddItemRepository,
     savedStateHandle: SavedStateHandle
-) : ViewModel(), DialogController {
+) :ViewModel(), DialogController {
+
+    private val _uiEvent = Channel<UiEvent>()
+
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     var itemsList: Flow<List<AddItem>>? = null
     var addItem: AddItem? = null
-    var listId: Int = -1
+     var shoppingListItem: ShoppingListItem? = null
+     var listId: Int = -1
 
     init {
         listId = savedStateHandle.get<String>("listId")?.toInt()!!
-        itemsList = listId.let { repository.getAllItemsByID(it) }
-        Log.d("MyLog", "List id View model $listId")
+            itemsList = repository.getAllItemsByID(listId)
+            viewModelScope.launch { shoppingListItem = repository.getListItemsByID(listId) }
+
+       // itemsList = listId?.let { repository.getAllItemsByID(it) }
+         Log.d("MyLog", "List id View model $listId")
     }
 
+  //  var itemsList: Flow<List<AddItem>>? =  listId?.let { repository.getAllItemsByID(it) }
     var itemText = mutableStateOf("")
         private set
     override var dialogTitle = mutableStateOf("Edit name:")
@@ -51,9 +66,22 @@ class AddItemViewModel @Inject constructor(
             is AddItemEvent.OnItemSave -> {
                 viewModelScope.launch {
                     if (listId == -1) return@launch
+                    if (addItem != null){
+                        if(addItem!!.name.isEmpty()){
+                            sendUiEvent(UiEvent.ShowShackBar("Name must not be empty"))
+                            return@launch
+                        }
+                    }else{
+                        if(itemText.value.isEmpty()){
+                            sendUiEvent(UiEvent.ShowShackBar("Name must not be empty"))
+                            return@launch
+                        }
+
+                    }
                     repository.insertItem(
                         AddItem(
-                            addItem?.id, itemText.value,
+                            addItem?.id,
+                            addItem?.name?: itemText.value,
                             addItem?.isCheck ?: false,
                             listId
                         )
@@ -61,6 +89,7 @@ class AddItemViewModel @Inject constructor(
                     itemText.value = ""
                     addItem = null
                 }
+                updateShoppingListCount()
             }
 
             is AddItemEvent.OnShowDEventDialog -> {
@@ -75,17 +104,18 @@ class AddItemViewModel @Inject constructor(
 
             is AddItemEvent.OnDelete -> {
                 viewModelScope.launch { repository.deleteItem(event.item) }
+                updateShoppingListCount()
             }
 
             is AddItemEvent.OnCheckedChange -> {
-                viewModelScope.launch{repository.insertItem(event.item)}
-
+                viewModelScope.launch { repository.insertItem(event.item) }
+                updateShoppingListCount()
             }
         }
 
     }
 
-     override fun onDialogEvent(event: DialogEvent) {
+    override fun onDialogEvent(event: DialogEvent) {
         when (event) {
 
             is DialogEvent.OnCancel -> {
@@ -95,8 +125,9 @@ class AddItemViewModel @Inject constructor(
 
             is DialogEvent.OnConfirm -> {
                 openDialog.value = false
-                itemText.value = editableText.value
+                addItem = addItem?.copy(name = editableText.value)
                 editableText.value = ""
+                onEvent(AddItemEvent.OnItemSave)
             }
 
             is DialogEvent.OnTextChange -> {
@@ -106,8 +137,24 @@ class AddItemViewModel @Inject constructor(
 
     }
 
-    private fun updateShoppingListCount(){
-        viewModelScope.launch {  }
+    private fun updateShoppingListCount() {
+        viewModelScope.launch {
+            itemsList?.collect { list ->
+                var conter = 0
+                list.forEach { item -> if (item.isCheck) conter++ }
 
+                shoppingListItem?.copy(
+                    allItemsCount = list.size, allSelectedItemsCount = conter
+                )?.let { shItem -> repository.insertItem(shItem) }
+
+            }
+        }
+
+    }
+
+    private fun sendUiEvent(event1: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event1)
+        }
     }
 }
