@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import pl.alexbul.shopinglistlesson.data.*
+import pl.alexbul.shopinglistlesson.datactore.DataStoreManager
 import javax.inject.Singleton
 
 @Module
@@ -32,6 +33,12 @@ object AppModule {
     @Singleton
     fun provideNoteRepo(db:MainDb):NoteRepository{
         return NoteReposImp(db.noteDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(app:Application):DataStoreManager{
+        return DataStoreManager(app)
     }
 
 

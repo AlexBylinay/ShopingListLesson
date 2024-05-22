@@ -22,7 +22,9 @@ fun NavigationGraph (navController: NavHostController, onNavigate: (String) -> U
             }
         }
         composable(Routs.NOTE_LIST){
-           NoteListScreen()
+           NoteListScreen(){route ->
+               onNavigate(route)
+           }
         }
         composable(Routs.ABOUT){
             AboutScreen()

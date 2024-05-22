@@ -13,6 +13,7 @@ import pl.alexbul.shopinglistlesson.data.ShoppingListRepository
 import pl.alexbul.shopinglistlesson.dialog.DialogEvent
 import pl.alexbul.shopinglistlesson.dialog.DialogController
 import pl.alexbul.shopinglistlesson.utils.UiEvent
+import pl.alexbul.shopinglistlesson.utils.getCurrentTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,7 +49,7 @@ class ShoppingListViewModel @Inject constructor(
                     repository.insertItem(
                         ShoppingListItem(
                             listItem?.id, editableText.value,
-                            "02.10.2023 14:47",
+                            listItem?.time ?: getCurrentTime(),
                             listItem?.allItemsCount ?: 0,
                             listItem?.allSelectedItemsCount ?: 0
                         )
@@ -98,7 +99,7 @@ class ShoppingListViewModel @Inject constructor(
                 editableText.value = event.text
             }
 
-            else -> {}
+
         }
     }
 

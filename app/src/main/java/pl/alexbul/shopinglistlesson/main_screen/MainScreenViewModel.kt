@@ -15,6 +15,7 @@ import pl.alexbul.shopinglistlesson.dialog.DialogEvent
 import pl.alexbul.shopinglistlesson.shopping_list_screen.ShoppingListEvent
 import pl.alexbul.shopinglistlesson.utils.Routs
 import pl.alexbul.shopinglistlesson.utils.UiEvent
+import pl.alexbul.shopinglistlesson.utils.getCurrentTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +50,7 @@ class MainScreenViewModel
                         ShoppingListItem(
                             null,
                             editableText.value,
-                            "02.10.2023 14:47",
+                            getCurrentTime(),
                             0,
                             0
                         )
@@ -57,8 +58,12 @@ class MainScreenViewModel
                 }
             }
 
-            is MainScreenEvent.OnShowDEventDialog -> {
-                openDialog.value = true
+            is MainScreenEvent.OnNewItemClick -> {
+                if (event.route == Routs.SHOPPING_LIST) {
+                    openDialog.value = true
+                } else {
+                    sendUiEvent(UiEvent.NavigateMain(Routs.NEW_NOTE + "/-1"))
+                }
             }
 
             is MainScreenEvent.Navigate -> {
@@ -72,6 +77,7 @@ class MainScreenViewModel
                 sendUiEvent(UiEvent.NavigateMain(event.route))
             }
 
+            else -> {}
         }
     }
 

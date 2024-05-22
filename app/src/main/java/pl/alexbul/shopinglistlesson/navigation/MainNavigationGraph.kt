@@ -24,8 +24,10 @@ val navController = rememberNavController()
         composable(Routs.ADD_ITEM+ "/{listId}") {
             AddItemScreen()
         }
-        composable(Routs.NEW_NOTE) {
-            NewNoteScreen()
+        composable(Routs.NEW_NOTE+"/{noteId}" ) {
+            NewNoteScreen(){
+                navController.popBackStack()
+            }
         }
         composable(Routs.MAIN_SCREEN) {
             MainScreen(navController)

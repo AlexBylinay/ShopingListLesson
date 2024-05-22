@@ -21,6 +21,7 @@ import pl.alexbul.shopinglistlesson.dialog.MainDialog
 import pl.alexbul.shopinglistlesson.navigation.NavigationGraph
 import pl.alexbul.shopinglistlesson.settings_screen.SettingsScreen
 import pl.alexbul.shopinglistlesson.shopping_list_screen.ShoppingListViewModel
+import pl.alexbul.shopinglistlesson.utils.Routs
 import pl.alexbul.shopinglistlesson.utils.UiEvent
 
 @SuppressLint
@@ -61,7 +62,7 @@ fun MainScreen(
         floatingActionButton = {
             if (viewModel.showFloatingButton.value)
             FloatingActionButton(onClick = {
-                viewModel.onEvent(MainScreenEvent.OnShowDEventDialog)
+                viewModel.onEvent(MainScreenEvent.OnNewItemClick(currentRoute?: Routs.SHOPPING_LIST))
             })
             {
                 Icon(
