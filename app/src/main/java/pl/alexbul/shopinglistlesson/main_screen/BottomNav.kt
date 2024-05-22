@@ -17,7 +17,8 @@ import pl.alexbul.shopinglistlesson.ui.theme.GrayLight
 
 @Composable
 fun BottomNav(
-    navController: NavHostController
+    currentRoute: String?,
+    onNavigate:(String)-> Unit
 ) {
     val listItems = listOf(
         BottomNavItem.ListItem,
@@ -27,12 +28,11 @@ fun BottomNav(
     )
     BottomNavigation(backgroundColor = Color.White) {
         listItems.forEach { item ->
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
+
             BottomNavigationItem(
                 selected = currentRoute == item.route, onClick =
                 {
-                    navController.navigate(item.route)
+                   onNavigate(item.route)
                 }, icon = {
                     Icon(
                         painter = painterResource(id = item.iconId),

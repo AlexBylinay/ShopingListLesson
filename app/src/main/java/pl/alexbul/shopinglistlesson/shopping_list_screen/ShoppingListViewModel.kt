@@ -1,6 +1,7 @@
 package pl.alexbul.shopinglistlesson.shopping_list_screen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,10 +13,12 @@ import pl.alexbul.shopinglistlesson.data.ShoppingListRepository
 import pl.alexbul.shopinglistlesson.dialog.DialogEvent
 import pl.alexbul.shopinglistlesson.dialog.DialogController
 import pl.alexbul.shopinglistlesson.utils.UiEvent
+import pl.alexbul.shopinglistlesson.utils.getCurrentTime
 import javax.inject.Inject
 
 @HiltViewModel
 class ShoppingListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: ShoppingListRepository
 ) : ViewModel(), DialogController {
 
@@ -46,7 +49,7 @@ class ShoppingListViewModel @Inject constructor(
                     repository.insertItem(
                         ShoppingListItem(
                             listItem?.id, editableText.value,
-                            "02.10.2023 14:47",
+                            listItem?.time ?: getCurrentTime(),
                             listItem?.allItemsCount ?: 0,
                             listItem?.allSelectedItemsCount ?: 0
                         )
@@ -95,6 +98,8 @@ class ShoppingListViewModel @Inject constructor(
             is DialogEvent.OnTextChange -> {
                 editableText.value = event.text
             }
+
+
         }
     }
 

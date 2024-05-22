@@ -24,8 +24,10 @@ import pl.alexbul.shopinglistlesson.ui.theme.DarkLight
 import pl.alexbul.shopinglistlesson.ui.theme.DarkText
 import  pl.alexbul.shopinglistlesson.R
 import pl.alexbul.shopinglistlesson.data.ShoppingListItem
+import pl.alexbul.shopinglistlesson.settings_screen.ColorUtils
 import pl.alexbul.shopinglistlesson.ui.theme.GreenLight
 import pl.alexbul.shopinglistlesson.ui.theme.Red500
+import pl.alexbul.shopinglistlesson.utils.ProgressHelper
 import pl.alexbul.shopinglistlesson.utils.Routs
 
 
@@ -35,6 +37,10 @@ fun UiShoppingListItem(
     onEvent: (ShoppingListEvent) -> Unit
 
 ) {
+
+    val progress = ProgressHelper()
+        .getProgress(item.allItemsCount, item.allSelectedItemsCount)
+
     ConstraintLayout(
         modifier = Modifier.padding(
             start = 4.dp, end = 6.dp, top = 18.dp
@@ -50,8 +56,11 @@ fun UiShoppingListItem(
                     end.linkTo(parent.end)
                 }
                 .clickable {
-                  onEvent(ShoppingListEvent.OnItemClick(
-                      Routs.ADD_ITEM + "/${item.id}"))
+                    onEvent(
+                        ShoppingListEvent.OnItemClick(
+                            Routs.ADD_ITEM + "/${item.id}"
+                        )
+                    )
 
                 })
         {
@@ -79,7 +88,10 @@ fun UiShoppingListItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 5.dp),
-                    progress = 0.5f
+                    progress = progress,
+                    color = ColorUtils.getProgressColor(progress)
+
+
                 )
 
             }

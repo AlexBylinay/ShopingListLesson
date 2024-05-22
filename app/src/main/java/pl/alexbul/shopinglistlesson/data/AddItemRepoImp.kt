@@ -17,7 +17,7 @@ class AddItemRepoImp(private val dao: AddItemDao): AddItemRepository
     }
 
     override fun getAllItemsByID(listId: Int): Flow<List<AddItem>> {
-       return getAllItemsByID(listId)
+       return dao.getAllItemsByID(listId)
     }
 
     override suspend fun getListItemsByID(listId: Int): ShoppingListItem {

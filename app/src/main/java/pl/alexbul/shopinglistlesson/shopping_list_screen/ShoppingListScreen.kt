@@ -12,11 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.collect
 import pl.alexbul.shopinglistlesson.dialog.MainDialog
+import pl.alexbul.shopinglistlesson.ui.theme.DarkText
 import pl.alexbul.shopinglistlesson.ui.theme.GrayLight
+import pl.alexbul.shopinglistlesson.ui.theme.TextLight
 import pl.alexbul.shopinglistlesson.utils.UiEvent
 
 @Composable
@@ -52,6 +56,17 @@ item ->  UiShoppingListItem(item){ event->
         }
     }
     MainDialog(viewModel)
+    if (itemsList.value.isEmpty()) {
+        Text(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight(),
+            text = "EMPTY",
+            fontSize = 30.sp,
+            color = TextLight,
+            textAlign = TextAlign.Center
+        )
+    }
 
 
 
